@@ -54,6 +54,11 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>${nimbus.jose.jwt.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -67,6 +72,7 @@
             java.lang.annotation.*,
             javax.security.auth.*,
             io.netty.handler.codec.http.*,
+            com.nimbusds.*,
         </import.package>
         <export.package>!org.wso2.carbon.security.internal, org.wso2.carbon.security.*</export.package>
         <dsannotations>*</dsannotations>
@@ -76,6 +82,7 @@
         <slf4j.version>1.7.5</slf4j.version>
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <equinox.osgi.services.version>3.4.0.v20140312-2051</equinox.osgi.services.version>
+        <nimbus.jose.jwt.version>2.26.1.wso2v3</nimbus.jose.jwt.version>
     </properties>
 
     <repositories>
