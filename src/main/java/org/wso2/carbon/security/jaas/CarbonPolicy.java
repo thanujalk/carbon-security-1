@@ -16,10 +16,14 @@
 
 package org.wso2.carbon.security.jaas;
 
+import org.wso2.carbon.security.util.AuthorizationManager;
 import sun.security.provider.PolicyFile;
 
+import java.security.AccessController;
 import java.security.Permission;
+import java.security.Principal;
 import java.security.ProtectionDomain;
+import javax.security.auth.Subject;
 
 /**
  *
@@ -32,8 +36,18 @@ public class CarbonPolicy extends PolicyFile {
 
         if (permission instanceof CarbonPermission) {
 
-            //TODO Implement carbon specific logic
-            authorized = true;
+            // get the current subject.
+            Subject subject = Subject.getSubject(AccessController.getContext());
+
+            // find the CarbonPrincipal
+            for (Principal principal : subject.getPrincipals()) {
+                if (principal instanceof CarbonPrincipal) {
+                    if (AuthorizationManager.getInstance().authorizePrincipal(principal.getName(),
+                                                                              (CarbonPermission) permission)) {
+                        return true;
+                    }
+                }
+            }
         }
 
         return authorized;

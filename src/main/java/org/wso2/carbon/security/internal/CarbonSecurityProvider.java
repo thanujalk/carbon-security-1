@@ -20,6 +20,9 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.wso2.carbon.security.jaas.CarbonPolicy;
+
+import java.security.Policy;
 
 /**
  * OSGi service component which handle authentication and authorization
@@ -32,7 +35,11 @@ public class CarbonSecurityProvider {
 
     @Activate
     public void registerCarbonSecurityProvider(BundleContext bundleContext) {
-        //TODO
+
+        //Registering CarbonPolicy
+        CarbonPolicy policy = new CarbonPolicy();
+        Policy.setPolicy(policy);
+        System.setSecurityManager(new SecurityManager());
     }
 
     @Deactivate
