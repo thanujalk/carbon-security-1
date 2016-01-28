@@ -216,7 +216,8 @@ public class BasicAuthLoginModule implements LoginModule {
     public boolean logout() throws LoginException {
 
         subject.getPrincipals().remove(carbonPrincipal);
-        success = commitSuccess;
+        success = false;
+        commitSuccess = false;
         username = null;
         if (password != null) {
             for (int i = 0; i < password.length; i++) {
