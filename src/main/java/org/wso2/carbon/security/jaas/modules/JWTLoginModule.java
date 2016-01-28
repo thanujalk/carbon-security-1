@@ -13,14 +13,13 @@ import org.wso2.carbon.security.exception.CarbonSecurityException;
 import org.wso2.carbon.security.jaas.CarbonCallback;
 import org.wso2.carbon.security.jaas.CarbonPrincipal;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
@@ -48,8 +47,6 @@ public class JWTLoginModule implements LoginModule {
 
     private static final Logger log = LoggerFactory.getLogger(JWTLoginModule.class);
     private static final String HTTP_AUTHORIZATION_BEARER = "Bearer";
-    //TODO Handle properly
-    private static final String KEYSTORE = "/Users/Omindu/Documents/IS/test-project/wso2carbon.jks";
     private static final String ALIAS = "wso2carbon";
     private static final String KEYSTORE_PASSWORD = "wso2carbon";
 
@@ -208,17 +205,24 @@ public class JWTLoginModule implements LoginModule {
         return true;
     }
 
+    /**
+     *
+     * Verifies the signature of a signed JWT.
+     *
+     * @param signedJWT
+     * @return true if the signature of the given JWT can is verified else false.
+     */
     private boolean verifySignature(SignedJWT signedJWT) {
         try {
 
             if (signedJWT != null) {
                 if (new Date().before(signedJWT.getJWTClaimsSet().getExpirationTime())) {
                     JWSVerifier verifier =
-                            new RSASSAVerifier((RSAPublicKey) getPublicKey(getKeyStorePath(), KEYSTORE_PASSWORD,
+                            new RSASSAVerifier((RSAPublicKey) getPublicKey(getTrustStorePath(), KEYSTORE_PASSWORD,
                                                                            ALIAS));
                     return signedJWT.verify(verifier);
                 } else {
-                    log.info("Token has expired");
+                    log.warn("Token has expired.");
                 }
             }
         } catch (ParseException | IOException | KeyStoreException | CertificateException |
@@ -228,29 +232,46 @@ public class JWTLoginModule implements LoginModule {
         return false;
     }
 
+    /**
+     *
+     * Returns public key from a certificate when provided key store path, key store password and certificate alias.
+     *
+     * @param keyStorePath
+     * @param keyStorePassword
+     * @param alias
+     * @return PublicKey
+     * @throws IOException
+     * @throws KeyStoreException
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws UnrecoverableKeyException
+     */
+
     private PublicKey getPublicKey(String keyStorePath, String keyStorePassword, String alias)
             throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException,
                    UnrecoverableKeyException {
 
         try (InputStream inputStream = new FileInputStream(keyStorePath)) {
+
             KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
             keystore.load(inputStream, keyStorePassword.toCharArray());
+            Certificate cert = keystore.getCertificate(alias);
 
-            Key key = keystore.getKey(alias, keyStorePassword.toCharArray());
-            if (key instanceof PrivateKey) {
-                // Get certificate of public key
-                Certificate cert = keystore.getCertificate(alias);
-
-                // Get public key
-                return cert.getPublicKey();
-            }
+            return cert.getPublicKey();
         }
-        return null;
     }
 
 
-    private String getKeyStorePath () {
+    /**
+     *
+     * Retrieves the file path of the client trust store
+     *
+     * @return String representing the trust store path.
+     */
+    private String getTrustStorePath() {
         //TODO Get the key store from a System Property or a util.
-        return KEYSTORE;
+        String truststore = System.getProperty("carbon.home") + File.separator + "conf" + File.separator +
+                            "data-bridge" + File.separator + "client-truststore.jks";
+        return truststore;
     }
 }
