@@ -24,7 +24,8 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 /**
- *
+ * The class {@code CarbonCallbackHandler} is an implementation {@code CarbonCallbackHandler}.
+ * This callback handler is used for handling {@code CarbonCallback} type callbacks.
  */
 public class CarbonCallbackHandler implements CallbackHandler {
 

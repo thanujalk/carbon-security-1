@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wso2.carbon.security.jaas.modules;
 
 import com.nimbusds.jose.JOSEException;
@@ -37,11 +53,11 @@ import javax.security.auth.spi.LoginModule;
 
 
 /**
+ * <p>
  * This LoginModule authenticates users with JWT tokens.
- * <p/>
- * <p>Upon successful authentication, <code>CarbonPrincipal</code> with user information is added to the subject.
- * <p/>
- * <p> This LoginModule does not recognize any options defined in the login configuration.
+ * Upon successful authentication, <code>CarbonPrincipal</code> with user information is added to the subject.
+ * This LoginModule does not recognize any options defined in the login configuration.
+ * </p>
  */
 public class JWTLoginModule implements LoginModule {
 
@@ -59,6 +75,14 @@ public class JWTLoginModule implements LoginModule {
     private SignedJWT signedJWT;
     private CarbonPrincipal carbonPrincipal;
 
+    /**
+     * <p>
+     * This method determines whether the login module can handle the content of the CarbonCallback.
+     * The method will extract the HttpRequest from the callback and check for a JWT.
+     *
+     * @param carbonCallback CarbonCallback
+     * @return true if the callback content can be handled, false if not.
+     */
     private boolean canHandle(CarbonCallback carbonCallback) {
 
         HttpRequest httpRequest = carbonCallback.getHttpRequest();
@@ -74,6 +98,14 @@ public class JWTLoginModule implements LoginModule {
         return true;
     }
 
+    /**
+     * <p>
+     * This method process the HTTP request and extracts signed JWT from the the HTTP header.
+     * The JWT should be included with the 'Bearer' prefix in the authorization header.
+     *
+     * @param httpRequest HTTP request with authorization header.
+     * @throws CarbonSecurityException
+     */
     private void requestPreProcessor(HttpRequest httpRequest) throws CarbonSecurityException {
 
         if (httpRequest != null) {
@@ -155,7 +187,7 @@ public class JWTLoginModule implements LoginModule {
     @Override
     public boolean commit() throws LoginException {
         if (!succeeded) {
-            return false;
+            commitSucceeded = false;
         } else {
 
             try {
@@ -206,10 +238,9 @@ public class JWTLoginModule implements LoginModule {
     }
 
     /**
+     * <p>Verifies the signature of a signed JWT.
      *
-     * Verifies the signature of a signed JWT.
-     *
-     * @param signedJWT
+     * @param signedJWT Signed JWT which needed to be verified.
      * @return true if the signature of the given JWT can is verified else false.
      */
     private boolean verifySignature(SignedJWT signedJWT) {
@@ -236,10 +267,10 @@ public class JWTLoginModule implements LoginModule {
      *
      * Returns public key from a certificate when provided key store path, key store password and certificate alias.
      *
-     * @param keyStorePath
-     * @param keyStorePassword
-     * @param alias
-     * @return PublicKey
+     * @param keyStorePath Absolute path to the key store.
+     * @param keyStorePassword Password of the key store.
+     * @param alias Alias of the public key certificate that needed be extracted.
+     * @return PublicKey extracted public key.
      * @throws IOException
      * @throws KeyStoreException
      * @throws CertificateException
@@ -264,7 +295,7 @@ public class JWTLoginModule implements LoginModule {
 
     /**
      *
-     * Retrieves the file path of the client trust store
+     * Retrieves the file path of the client trust store.
      *
      * @return String representing the trust store path.
      */

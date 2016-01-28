@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Definition for RequirePermission annotation
+ * Definition for RequirePermission annotation.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

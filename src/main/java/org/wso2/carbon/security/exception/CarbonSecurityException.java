@@ -17,7 +17,8 @@
 package org.wso2.carbon.security.exception;
 
 /**
- *
+ * This class {@code CarbonSecurityException} is a form of {@code Exception}
+ * that indicates exceptions related to Carbon Security module.
  */
 public class CarbonSecurityException extends Exception {
 

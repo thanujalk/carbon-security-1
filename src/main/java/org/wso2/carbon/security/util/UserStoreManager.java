@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * In memory user store manager
+ * In memory user store manager.
  */
 public class UserStoreManager {
 
@@ -38,6 +38,13 @@ public class UserStoreManager {
         return instance;
     }
 
+    /**
+     * Authenticates a user, given the username and password.
+     *
+     * @param username String username
+     * @param password user password in char array
+     * @return true if the authentication is success, else false.
+     */
     public boolean authenticate(String username, char[] password) {
 
         if (username != null && !username.isEmpty()) {

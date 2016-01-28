@@ -22,7 +22,8 @@ import java.io.Serializable;
 import java.security.Principal;
 
 /**
- *
+ * This class {@code CarbonPrincipal} is the principal representation of the carbon platform.
+ * This is an implementation of {@code Principal}.
  */
 public class CarbonPrincipal implements Principal, Serializable {
 
@@ -61,6 +62,11 @@ public class CarbonPrincipal implements Principal, Serializable {
         return this.name;
     }
 
+    /**
+     * Checks whether the current principal has a given {@code CarbonPermission}.
+     * @param carbonPermission CarbonPermission which needs to be checked with principal instance.
+     * @return true if authorized.
+     */
     public boolean isAuthorized(CarbonPermission carbonPermission) {
 
         if (carbonPermission == null) {

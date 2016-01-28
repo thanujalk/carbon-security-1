@@ -25,10 +25,15 @@ import java.security.ProtectionDomain;
 import javax.security.auth.Subject;
 
 /**
+ * <p>
+ * The class {@code CarbonPolicy} is the carbon specific extension of {@code PolicyFile}.
+ * This class's {@code implies} method is overridden to specially handle {@code CarbonPermission} and uses the carbon
+ * authorization implementation to check authorization.
  *
  */
 public class CarbonPolicy extends PolicyFile {
 
+    @Override
     public boolean implies(ProtectionDomain domain, Permission permission) {
 
         boolean authorized = super.implies(domain, permission);

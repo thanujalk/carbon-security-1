@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * In memory authorization manager
+ * In memory authorization manager.
  */
 public class AuthorizationManager {
 
@@ -24,6 +24,13 @@ public class AuthorizationManager {
         return instance;
     }
 
+    /**
+     * Checks whether a given principal is authorized against a provided permission.
+     *
+     * @param principalName Name of the principal.
+     * @param requiredPermission Permission which the principal should be checked against.
+     * @return
+     */
     public boolean authorizePrincipal(String principalName, CarbonPermission requiredPermission) {
 
         if (principalName != null && !principalName.isEmpty()) {

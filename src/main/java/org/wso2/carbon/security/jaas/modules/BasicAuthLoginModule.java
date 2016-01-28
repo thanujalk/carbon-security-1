@@ -37,11 +37,11 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
 /**
+ * <p>
  * This LoginModule authenticates users against the underline UserStoreManager.
- * <p/>
- * <p>Upon successful authentication, <code>CarbonPrincipal</code> with user information is added to the subject.
- * <p/>
- * <p> This LoginModule does not recognize any options defined in the login configuration.
+ * Upon successful authentication, <code>CarbonPrincipal</code> with user information is added to the subject.
+ * This LoginModule does not recognize any options defined in the login configuration.
+ * </p>
  */
 public class BasicAuthLoginModule implements LoginModule {
 
@@ -57,6 +57,14 @@ public class BasicAuthLoginModule implements LoginModule {
     private boolean commitSuccess = false;
     private CarbonPrincipal carbonPrincipal;
 
+    /**
+     * <p>
+     * This method determines whether the login module can handle the content of the CarbonCallback.
+     * The method will extract the HttpRequest from the callback and check for basic authorization header.
+     * @param carbonCallback CarbonCallback
+     * @return true if the callback content can be handled, false if not.
+     * @throws LoginException
+     */
     private boolean canHandle(CarbonCallback carbonCallback) throws LoginException {
 
         HttpRequest httpRequest = carbonCallback.getHttpRequest();
@@ -151,8 +159,8 @@ public class BasicAuthLoginModule implements LoginModule {
     @Override
     public boolean commit() throws LoginException {
 
-        if (success == false) {
-            return false;
+        if (!success) {
+            commitSuccess = false;
         } else {
             // TODO username is set as role name temporally
             carbonPrincipal = new CarbonPrincipal(username);
@@ -167,8 +175,8 @@ public class BasicAuthLoginModule implements LoginModule {
             password = null;
 
             commitSuccess = true;
-            return commitSuccess;
         }
+        return commitSuccess;
     }
 
     /**
@@ -184,9 +192,9 @@ public class BasicAuthLoginModule implements LoginModule {
     @Override
     public boolean abort() throws LoginException {
 
-        if (success == false) {
+        if (!success) {
             return false;
-        } else if (commitSuccess == false) {
+        } else if (!commitSuccess) {
             // login success but overall authentication failed
             success = false;
             username = null;
