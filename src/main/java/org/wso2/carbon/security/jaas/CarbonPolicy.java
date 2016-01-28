@@ -33,7 +33,7 @@ public class CarbonPolicy extends PolicyFile {
 
         boolean authorized = super.implies(domain, permission);
 
-        if (permission instanceof CarbonPermission) {
+        if (authorized && permission instanceof CarbonPermission) {
 
             // get the current subject.
             Subject subject = Subject.getSubject(AccessController.getContext());
