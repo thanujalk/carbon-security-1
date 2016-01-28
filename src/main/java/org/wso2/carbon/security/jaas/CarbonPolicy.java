@@ -16,7 +16,6 @@
 
 package org.wso2.carbon.security.jaas;
 
-import org.wso2.carbon.security.util.AuthorizationManager;
 import sun.security.provider.PolicyFile;
 
 import java.security.AccessController;
@@ -42,8 +41,7 @@ public class CarbonPolicy extends PolicyFile {
             // find the CarbonPrincipal
             for (Principal principal : subject.getPrincipals()) {
                 if (principal instanceof CarbonPrincipal) {
-                    if (AuthorizationManager.getInstance().authorizePrincipal(principal.getName(),
-                                                                              (CarbonPermission) permission)) {
+                    if (((CarbonPrincipal) principal).isAuthorized((CarbonPermission) permission)) {
                         return true;
                     }
                 }

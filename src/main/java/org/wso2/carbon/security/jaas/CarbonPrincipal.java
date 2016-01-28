@@ -16,6 +16,8 @@
 
 package org.wso2.carbon.security.jaas;
 
+import org.wso2.carbon.security.util.AuthorizationManager;
+
 import java.io.Serializable;
 import java.security.Principal;
 
@@ -57,6 +59,16 @@ public class CarbonPrincipal implements Principal, Serializable {
     public String getName() {
 
         return this.name;
+    }
+
+    public boolean isAuthorized(CarbonPermission carbonPermission) {
+
+        if (carbonPermission == null) {
+            throw new IllegalArgumentException("Permission object cannot be null");
+        }
+
+        return (AuthorizationManager.getInstance().authorizePrincipal(this.getName(), carbonPermission));
+
     }
 
 
