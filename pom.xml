@@ -59,6 +59,11 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <version>${nimbus.jose.jwt.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.context</groupId>
+            <artifactId>org.wso2.carbon.context.api</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -73,6 +78,7 @@
             javax.security.auth.*,
             io.netty.handler.codec.http.*,
             com.nimbusds.*,
+            org.wso2.carbon.context.*,
         </import.package>
         <export.package>!org.wso2.carbon.security.internal, org.wso2.carbon.security.*</export.package>
         <dsannotations>*</dsannotations>
